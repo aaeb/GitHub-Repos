@@ -40,9 +40,11 @@ class MainActivityViewModel(var serviceApi: ServiceAPIs, var schedulerProvider: 
         liveGithubDataSourceFactory = GithubDataSourceFactory(serviceApi, schedulerProvider, query)
         _liveGithubDataSource = liveGithubDataSourceFactory.liveDataSource
 
+        // SwitchMap between _networkState LiveData and DataSource networkState
         _networkState = Transformations.switchMap(liveGithubDataSourceFactory.liveDataSource
         ) { dataSource -> dataSource.getNetworkState }
 
+        // SwitchMap between _networkState LiveData and DataSource networkState
         _initialState = Transformations.switchMap(liveGithubDataSourceFactory.liveDataSource
         ) { dataSource -> dataSource.getInitialLoading }
 

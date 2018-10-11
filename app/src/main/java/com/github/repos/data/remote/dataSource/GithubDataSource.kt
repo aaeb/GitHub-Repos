@@ -33,6 +33,9 @@ class GithubDataSource(private val serviceApi: ServiceAPIs, private val schedule
         get() = initialLoading
 
 
+    /**
+     * is called for the first page
+     * */
     override fun loadInitial(params: LoadInitialParams<Long>, callback: LoadInitialCallback<Long, RepoResponse.Item>) {
         networkState.postValue(AppNetworkState(AppNetworkState.State.LOADING, null))
         initialLoading.postValue(AppNetworkState(AppNetworkState.State.LOADING, null))
@@ -62,6 +65,9 @@ class GithubDataSource(private val serviceApi: ServiceAPIs, private val schedule
 
     }
 
+    /**
+     * is called after the first page calling
+     * */
     override fun loadAfter(params: LoadParams<Long>, callback: LoadCallback<Long, RepoResponse.Item>) {
         networkState.postValue(AppNetworkState(AppNetworkState.State.LOADING, null))
 

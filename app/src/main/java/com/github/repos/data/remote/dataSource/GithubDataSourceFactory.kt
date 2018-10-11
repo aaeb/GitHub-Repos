@@ -14,7 +14,9 @@ class GithubDataSourceFactory(private val serviceAPIs: ServiceAPIs, private val 
     val liveDataSource
         get() = _liveDataSource
 
-
+    /**
+     * Create DataSource Object
+     * */
     override fun create(): DataSource<Long, RepoResponse.Item> {
         _githubDataSource = GithubDataSource(serviceAPIs, schedulerProvider, queryText)
         _liveDataSource.postValue(_githubDataSource)

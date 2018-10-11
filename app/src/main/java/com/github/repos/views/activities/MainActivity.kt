@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
     private fun initUI() {
 
         sw_home.setOnRefreshListener {
-            pullToRefresh()
+            updateQuery()
         }
         rc_home.layoutManager = mLinearLayoutManager
         rc_home.itemAnimator = DefaultItemAnimator()
@@ -71,9 +71,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun callSearchApi(value: String) {
         if (NetworkUtils.isNetworkConnected(this)) {
-//            sw_home.isRefreshing = true
             mViewModel.callGithubRepos(value)
-
             subscribeObserver()
 
         } else {
@@ -81,21 +79,23 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun pullToRefresh() {
-//        sw_home.isRefreshing = true
-        updateQuery()
-    }
-
+    /**
+     * set observer on the LiveData objects to be notified for any update
+     * */
     private fun subscribeObserver() {
+
+        // Adapter is notified for any data updates
         mViewModel.liveGithubResponse.observe(this, Observer {
             mAdapter.submitList(it)
 
         })
 
+        // Adapter is notified for any state updates to show or hide progress bar
         mViewModel.networkState.observe(this, Observer {
             mAdapter.updateNetworkState(it!!)
         })
 
+        // listen for the initial state updates to show or hide swipe refresh loader
         mViewModel.initialState.observe(this, Observer {
             when (it!!.state) {
                 AppNetworkState.State.LOADING -> sw_home.isRefreshing = true
@@ -127,6 +127,9 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    /**
+     * called when there is any update in the query string or perform refreshing
+     * */
     private fun updateQuery() {
         if (NetworkUtils.isNetworkConnected(this)) {
             rc_home.scrollToPosition(0)
@@ -134,15 +137,11 @@ class MainActivity : AppCompatActivity() {
 
             mViewModel.liveGithubDataSource.value!!.invalidate()
             callSearchApi(currentQuery)
-
-//            if (!searchView.isIconified) {
-//                searchView.isIconified = true
-//            }
-//            myActionMenuItem.collapseActionView()
         } else {
             showSnackBar(getString(R.string.all_no_internet))
         }
     }
+
 
     fun showSnackBar(string: String) {
         snackbar = Snackbar.make(findViewById(android.R.id.content), string, Snackbar.LENGTH_LONG)
