@@ -3,6 +3,7 @@ package com.github.repos.data.adapers
 import android.arch.paging.PagedListAdapter
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.support.v7.util.DiffUtil
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -14,7 +15,9 @@ import com.github.repos.databinding.NetworkItemBinding
 import com.github.repos.databinding.RepoListItemBinding
 import com.github.repos.utils.AppNetworkState
 import com.github.repos.views.activities.RepoDetailsActivity
+import com.google.gson.Gson
 import com.squareup.picasso.Picasso
+import android.support.customtabs.CustomTabsIntent
 
 
 class ReposAdapter : PagedListAdapter<RepoResponse.Item, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
@@ -23,6 +26,7 @@ class ReposAdapter : PagedListAdapter<RepoResponse.Item, RecyclerView.ViewHolder
     private val TYPE_ITEM = 1
     private var networkState: AppNetworkState? = null
 
+    private val mGson = Gson()
     private lateinit var intent: Intent
     lateinit var mContext: Context
 
@@ -72,26 +76,28 @@ class ReposAdapter : PagedListAdapter<RepoResponse.Item, RecyclerView.ViewHolder
                         .into(mViewBinding.imgUserAvatar)
             }
 
-            mViewBinding.cardRepoItem.setOnClickListener {
+            mViewBinding.lyRepoItem.setOnClickListener {
+                var itemStr = mGson.toJson(item)
+                intent.putExtra(RepoDetailsActivity.REPO_DATA, itemStr)
                 mContext.startActivity(intent)
 
             }
+
             mViewBinding.executePendingBindings()
         }
-
     }
 
-    inner class NetworkStateItemViewHolder(var networkItemBinding: NetworkItemBinding) : RecyclerView.ViewHolder(networkItemBinding.root) {
+    inner class NetworkStateItemViewHolder(private var networkItemBinding: NetworkItemBinding) : RecyclerView.ViewHolder(networkItemBinding.root) {
         fun onBind(networkState: AppNetworkState?) {
-            if (networkState != null && networkState == AppNetworkState.State.LOADING) {
+            if (networkState != null && networkState.state == AppNetworkState.State.LOADING) {
                 networkItemBinding.proNetwork.visibility = View.VISIBLE
             } else {
                 networkItemBinding.proNetwork.visibility = View.GONE
             }
-
-            if (networkState != null && networkState == AppNetworkState.State.FAILED) {
+//
+            if (networkState != null && networkState.state == AppNetworkState.State.FAILED) {
                 networkItemBinding.tvNetworkError.visibility = View.VISIBLE
-                networkItemBinding.tvNetworkError.text = (networkState as AppNetworkState.TooliStringState).value!!
+                networkItemBinding.tvNetworkError.text = networkState.value!!
             } else {
                 networkItemBinding.tvNetworkError.visibility = View.GONE
             }
@@ -108,7 +114,7 @@ class ReposAdapter : PagedListAdapter<RepoResponse.Item, RecyclerView.ViewHolder
     }
 
     private fun hasExtraRow(): Boolean {
-        return networkState != null && networkState != AppNetworkState.State.LOADED
+        return networkState != null && networkState!!.state != AppNetworkState.State.LOADED
     }
 
     fun updateNetworkState(newNetworkState: AppNetworkState) {
@@ -123,7 +129,7 @@ class ReposAdapter : PagedListAdapter<RepoResponse.Item, RecyclerView.ViewHolder
             } else {
                 notifyItemInserted(itemCount)
             }
-        } else if (newExtraRow && previousState !== newNetworkState) {
+        } else if (newExtraRow && previousState != newNetworkState) {
             notifyItemChanged(itemCount - 1)
         }
     }

@@ -34,25 +34,9 @@ class GithubDataSource(private val serviceApi: ServiceAPIs, private val schedule
 
 
     override fun loadInitial(params: LoadInitialParams<Long>, callback: LoadInitialCallback<Long, RepoResponse.Item>) {
-        networkState.postValue(AppNetworkState.TooliStringState(AppNetworkState.State.LOADING, null))
-        initialLoading.postValue(AppNetworkState.TooliStringState(AppNetworkState.State.LOADING, null))
+        networkState.postValue(AppNetworkState(AppNetworkState.State.LOADING, null))
+        initialLoading.postValue(AppNetworkState(AppNetworkState.State.LOADING, null))
 
-//        serviceApi.callRepos(_firstPage, _pageSize, queryText)
-//                .enqueue(object : Callback<RepoResponse> {
-//                    override fun onFailure(call: Call<RepoResponse>?, t: Throwable?) {
-//                        networkState.postValue(AppNetworkState.TooliStringState(AppNetworkState.State.FAILED, t!!.message))
-//
-//                    }
-//
-//                    override fun onResponse(call: Call<RepoResponse>?, response: Response<RepoResponse>?) {
-//                        if (response!!.isSuccessful) {
-//                            callback.onResult(response.body()!!.items, null, _firstPage + 1)
-//                            networkState.postValue(AppNetworkState.TooliStringState(AppNetworkState.State.LOADED, null))
-//                        } else {
-//                            networkState.postValue(AppNetworkState.TooliStringState(AppNetworkState.State.FAILED, response.message()))
-//                        }
-//                    }
-//                })
         serviceApi.callRepos(_firstPage, _pageSize, queryText)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
@@ -63,38 +47,24 @@ class GithubDataSource(private val serviceApi: ServiceAPIs, private val schedule
                     override fun onNext(t: RepoResponse) {
                         t.items.let {
                             callback.onResult(it, null, _firstPage + 1)
-                            networkState.postValue(AppNetworkState.TooliStringState(AppNetworkState.State.LOADED, null))
+                            networkState.postValue(AppNetworkState(AppNetworkState.State.LOADED, null))
+                            initialLoading.postValue(AppNetworkState(AppNetworkState.State.LOADED, null))
+
                         }
                     }
 
                     override fun onError(e: Throwable) {
-                        networkState.postValue(AppNetworkState.TooliStringState(AppNetworkState.State.FAILED, e.message!!))
+                        networkState.postValue(AppNetworkState(AppNetworkState.State.FAILED, e.message!!))
+                        initialLoading.postValue(AppNetworkState(AppNetworkState.State.FAILED, null))
+
                     }
                 })
 
     }
 
     override fun loadAfter(params: LoadParams<Long>, callback: LoadCallback<Long, RepoResponse.Item>) {
-        networkState.postValue(AppNetworkState.TooliStringState(AppNetworkState.State.LOADING, null))
+        networkState.postValue(AppNetworkState(AppNetworkState.State.LOADING, null))
 
-
-//        serviceApi.callRepos(params.key.toLong(), _pageSize, queryText)
-//                .enqueue(object : Callback<RepoResponse> {
-//                    override fun onFailure(call: Call<RepoResponse>?, t: Throwable?) {
-//                        networkState.postValue(AppNetworkState.TooliStringState(AppNetworkState.State.FAILED, t!!.message))
-//
-//                    }
-//
-//                    override fun onResponse(call: Call<RepoResponse>?, response: Response<RepoResponse>?) {
-//                        if (response!!.isSuccessful) {
-//                            val nextKey = (if (params.key === response.body()!!.count) null else params.key + 1)
-//                            callback.onResult(response.body()!!.items, nextKey)
-//                            networkState.postValue(AppNetworkState.TooliStringState(AppNetworkState.State.LOADED, null))
-//                        } else {
-//                            networkState.postValue(AppNetworkState.TooliStringState(AppNetworkState.State.FAILED, response.message()))
-//                        }
-//                    }
-//                })
 
         serviceApi.callRepos(params.key.toLong(), _pageSize, queryText)
                 .subscribeOn(schedulerProvider.io())
@@ -105,7 +75,7 @@ class GithubDataSource(private val serviceApi: ServiceAPIs, private val schedule
 
                     override fun onNext(t: RepoResponse) {
                         t.items.let {
-                            networkState.postValue(AppNetworkState.TooliStringState(AppNetworkState.State.LOADED, null))
+                            networkState.postValue(AppNetworkState(AppNetworkState.State.LOADED, null))
                             val nextKey = (if (params.key == t.count) null else params.key + 1)
                             callback.onResult(it, nextKey)
                         }
@@ -113,7 +83,7 @@ class GithubDataSource(private val serviceApi: ServiceAPIs, private val schedule
                     }
 
                     override fun onError(e: Throwable) {
-                        networkState.postValue(AppNetworkState.TooliStringState(AppNetworkState.State.FAILED, e.message!!))
+                        networkState.postValue(AppNetworkState(AppNetworkState.State.FAILED, e.message!!))
                     }
 
                 })

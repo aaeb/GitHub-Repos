@@ -9,7 +9,7 @@
     <dimen name="font_12">12sp</dimen>
     <dimen name="space_2">2dp</dimen>
     <dimen name="space_12">12dp</dimen>
-    <dimen name="app_bar_height">200dp</dimen>
+    <dimen name="app_bar_height">220dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
 </resources>

@@ -17,6 +17,7 @@ class MainActivityViewModel(var serviceApi: ServiceAPIs, var schedulerProvider: 
     private lateinit var _liveGithubResponse: LiveData<PagedList<RepoResponse.Item>>
     private lateinit var _liveGithubDataSource: MutableLiveData<GithubDataSource>
     private lateinit var _networkState: LiveData<AppNetworkState>
+    private lateinit var _initialState: LiveData<AppNetworkState>
     private lateinit var liveGithubDataSourceFactory: GithubDataSourceFactory
 
     val liveGithubResponse: LiveData<PagedList<RepoResponse.Item>>
@@ -28,6 +29,8 @@ class MainActivityViewModel(var serviceApi: ServiceAPIs, var schedulerProvider: 
     val networkState
         get() = _networkState
 
+    val initialState
+        get() = _initialState
 
     fun callGithubRepos(query: String) {
 
@@ -39,6 +42,10 @@ class MainActivityViewModel(var serviceApi: ServiceAPIs, var schedulerProvider: 
 
         _networkState = Transformations.switchMap(liveGithubDataSourceFactory.liveDataSource
         ) { dataSource -> dataSource.getNetworkState }
+
+        _initialState = Transformations.switchMap(liveGithubDataSourceFactory.liveDataSource
+        ) { dataSource -> dataSource.getInitialLoading }
+
 
         val builder = LivePagedListBuilder<Long, RepoResponse.Item>(liveGithubDataSourceFactory, pagedListConfig)
         _liveGithubResponse = builder.build()

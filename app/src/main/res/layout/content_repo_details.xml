@@ -8,10 +8,218 @@
     tools:context=".views.activities.RepoDetailsActivity"
     tools:showIn="@layout/activity_repo_details">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:text="@string/large_text" />
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/space_20">
+
+        <TextView
+            android:id="@+id/tv_repo_details_name_txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/all_repos_name"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/font_16" />
+
+        <TextView
+            android:id="@+id/tv_repo_details_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_10"
+            android:text="@string/all_repos_name"
+            android:textSize="@dimen/font_14"
+            app:layout_constraintTop_toBottomOf="@id/tv_repo_details_name_txt" />
+
+        <ImageView
+            android:id="@+id/img_name_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/space_20"
+            android:background="@color/color_black"
+            app:layout_constraintTop_toBottomOf="@+id/tv_repo_details_name" />
+
+        <TextView
+            android:id="@+id/tv_repo_details_description_txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_20"
+            android:text="@string/all_repos_description"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/font_16"
+            app:layout_constraintTop_toBottomOf="@+id/img_name_divider" />
+
+        <TextView
+            android:id="@+id/tv_repo_details_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_10"
+            android:text="@string/all_repos_name"
+            android:textSize="@dimen/font_14"
+            app:layout_constraintTop_toBottomOf="@id/tv_repo_details_description_txt" />
+
+        <ImageView
+            android:id="@+id/img_description_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/space_20"
+            android:background="@color/color_black"
+            app:layout_constraintTop_toBottomOf="@+id/tv_repo_details_description" />
+
+        <TextView
+            android:id="@+id/tv_repo_details_url_txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_20"
+            android:text="@string/all_repos_url"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/font_16"
+            app:layout_constraintTop_toBottomOf="@+id/img_description_divider" />
+
+        <TextView
+            android:id="@+id/tv_repo_details_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_10"
+            android:autoLink="web"
+            android:text="@string/all_repos_name"
+            android:textColorLink="@color/colorPrimary"
+            android:textSize="@dimen/font_14"
+            app:layout_constraintTop_toBottomOf="@id/tv_repo_details_url_txt" />
+
+        <ImageView
+            android:id="@+id/img_url_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/space_20"
+            android:background="@color/color_black"
+            app:layout_constraintTop_toBottomOf="@+id/tv_repo_details_url" />
+
+        <TextView
+            android:id="@+id/tv_repo_details_lang_txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_20"
+            android:text="@string/all_repos_lang"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/font_16"
+            app:layout_constraintTop_toBottomOf="@+id/img_url_divider" />
+
+        <TextView
+            android:id="@+id/tv_repo_details_lang"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_10"
+            android:text="@string/all_repos_lang"
+            android:textSize="@dimen/font_14"
+            app:layout_constraintTop_toBottomOf="@id/tv_repo_details_lang_txt" />
+
+        <ImageView
+            android:id="@+id/img_lang_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/space_20"
+            android:background="@color/color_black"
+            app:layout_constraintTop_toBottomOf="@+id/tv_repo_details_lang" />
+
+        <TextView
+            android:id="@+id/tv_repo_details_create_txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_20"
+            android:text="@string/all_repos_create_at"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/font_16"
+            app:layout_constraintTop_toBottomOf="@+id/img_lang_divider" />
+
+        <TextView
+            android:id="@+id/tv_repo_details_create"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_10"
+            android:text="@string/all_repos_name"
+            android:textSize="@dimen/font_14"
+            app:layout_constraintTop_toBottomOf="@id/tv_repo_details_create_txt" />
+
+        <ImageView
+            android:id="@+id/img_creation_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/space_20"
+            android:background="@color/color_black"
+            app:layout_constraintTop_toBottomOf="@+id/tv_repo_details_create" />
+
+        <TextView
+            android:id="@+id/tv_repo_details_score_txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/all_repos_score"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/font_16"
+            app:layout_constraintTop_toBottomOf="@+id/img_creation_divider" />
+
+        <TextView
+            android:id="@+id/tv_repo_details_score"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_10"
+            android:text="@string/all_repos_name"
+            android:textSize="@dimen/font_14"
+            app:layout_constraintTop_toBottomOf="@id/tv_repo_details_score_txt" />
+
+        <ImageView
+            android:id="@+id/img_score_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/space_20"
+            android:background="@color/color_black"
+            app:layout_constraintTop_toBottomOf="@+id/tv_repo_details_score" />
+
+        <TextView
+            android:id="@+id/tv_repo_details_forks_txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_20"
+            android:text="@string/all_repos_forks"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/font_16"
+            app:layout_constraintTop_toBottomOf="@+id/img_score_divider" />
+
+        <TextView
+            android:id="@+id/tv_repo_details_forks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_10"
+            android:text="@string/all_repos_name"
+            android:textSize="@dimen/font_14"
+            app:layout_constraintTop_toBottomOf="@id/tv_repo_details_forks_txt" />
+
+        <ImageView
+            android:id="@+id/img_forks_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/space_20"
+            android:background="@color/color_black"
+            app:layout_constraintTop_toBottomOf="@+id/tv_repo_details_forks" />
+
+        <TextView
+            android:id="@+id/tv_repo_details_watchers_txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_20"
+            android:text="@string/all_repos_name"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/font_16"
+            app:layout_constraintTop_toBottomOf="@+id/img_forks_divider" />
+
+        <TextView
+            android:id="@+id/tv_repo_details_watchers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_10"
+            android:text="@string/all_repos_watchers"
+            android:textSize="@dimen/font_14"
+            app:layout_constraintTop_toBottomOf="@id/tv_repo_details_watchers_txt" />
+    </android.support.constraint.ConstraintLayout>
+
 
 </android.support.v4.widget.NestedScrollView>

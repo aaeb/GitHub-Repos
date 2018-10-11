@@ -3,13 +3,18 @@ package com.github.repos.views.activities
 import android.arch.lifecycle.Observer
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.design.widget.Snackbar
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.view.Menu
 import com.github.repos.R
 import kotlinx.android.synthetic.main.activity_main.*
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
+import android.view.MenuItem
 import com.github.repos.data.adapers.ReposAdapter
+import com.github.repos.utils.AppNetworkState
+import com.github.repos.utils.NetworkUtils
 import com.github.repos.viewModel.MainActivityViewModel
 import dagger.android.AndroidInjection
 import javax.inject.Inject
@@ -25,6 +30,13 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var mAdapter: ReposAdapter
+
+    private var snackbar: Snackbar? = null
+
+    private var currentQuery = "googleSamples"
+
+    private lateinit var searchView: SearchView
+    private lateinit var myActionMenuItem: MenuItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
         performDependencyInjection()
@@ -43,44 +55,67 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initUI() {
+
+        sw_home.setOnRefreshListener {
+            pullToRefresh()
+        }
         rc_home.layoutManager = mLinearLayoutManager
         rc_home.itemAnimator = DefaultItemAnimator()
         rc_home.setHasFixedSize(true)
         rc_home.adapter = mAdapter
         mAdapter.attachContext(this)
 
-        mViewModel.callGithubRepos("googleSamples")
+        callSearchApi(currentQuery)
 
-        subscribeObserver()
+    }
+
+    private fun callSearchApi(value: String) {
+        if (NetworkUtils.isNetworkConnected(this)) {
+//            sw_home.isRefreshing = true
+            mViewModel.callGithubRepos(value)
+
+            subscribeObserver()
+
+        } else {
+            showSnackBar(getString(R.string.all_no_internet))
+        }
+    }
+
+    private fun pullToRefresh() {
+//        sw_home.isRefreshing = true
+        updateQuery()
     }
 
     private fun subscribeObserver() {
         mViewModel.liveGithubResponse.observe(this, Observer {
             mAdapter.submitList(it)
+
         })
 
         mViewModel.networkState.observe(this, Observer {
             mAdapter.updateNetworkState(it!!)
         })
+
+        mViewModel.initialState.observe(this, Observer {
+            when (it!!.state) {
+                AppNetworkState.State.LOADING -> sw_home.isRefreshing = true
+                AppNetworkState.State.LOADED -> sw_home.isRefreshing = false
+                AppNetworkState.State.FAILED -> sw_home.isRefreshing = false
+            }
+        })
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.search_menu, menu)
-        val myActionMenuItem = menu!!.findItem(R.id.action_search)
+        myActionMenuItem = menu!!.findItem(R.id.action_search)
 
-        val searchView = myActionMenuItem.actionView as SearchView
+        searchView = myActionMenuItem.actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
 
-                mViewModel.liveGithubDataSource.observe(this@MainActivity, Observer {
-                    it!!.invalidate()
-                    subscribeObserver()
-                    mViewModel.callGithubRepos(query!!)
-                    if (!searchView.isIconified) {
-                        searchView.isIconified = true
-                    }
-                    myActionMenuItem.collapseActionView()
-                })
+                currentQuery = query!!
+                updateQuery()
 
                 return false
             }
@@ -90,5 +125,31 @@ class MainActivity : AppCompatActivity() {
             }
         })
         return true
+    }
+
+    private fun updateQuery() {
+        if (NetworkUtils.isNetworkConnected(this)) {
+            rc_home.scrollToPosition(0)
+            (rc_home.adapter as? ReposAdapter)?.submitList(null)
+
+            mViewModel.liveGithubDataSource.value!!.invalidate()
+            callSearchApi(currentQuery)
+
+//            if (!searchView.isIconified) {
+//                searchView.isIconified = true
+//            }
+//            myActionMenuItem.collapseActionView()
+        } else {
+            showSnackBar(getString(R.string.all_no_internet))
+        }
+    }
+
+    fun showSnackBar(string: String) {
+        snackbar = Snackbar.make(findViewById(android.R.id.content), string, Snackbar.LENGTH_LONG)
+        snackbar?.setActionTextColor(ContextCompat.getColor(this, R.color.colorAccent))
+        snackbar?.setAction("DISMISS") {
+            snackbar?.dismiss()
+        }
+        snackbar?.show()
     }
 }
