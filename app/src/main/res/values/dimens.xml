@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="space_10">10dp</dimen>
+    <dimen name="space_6">6dp</dimen>
+    <dimen name="space_4">4dp</dimen>
+    <dimen name="font_16">16sp</dimen>
+    <dimen name="font_14">14sp</dimen>
+    <dimen name="space_20">20dp</dimen>
+    <dimen name="font_12">12sp</dimen>
+    <dimen name="space_2">2dp</dimen>
+    <dimen name="space_12">12dp</dimen>
+    <dimen name="app_bar_height">200dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+</resources>
