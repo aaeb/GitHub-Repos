@@ -16,7 +16,7 @@ LiveData
 
 2- Architecture DesignPattern:-
 
-MVVm
+MVVm with Databinding
 
 
 3- Reactive Programing
