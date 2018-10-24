@@ -14,23 +14,12 @@ import com.github.repos.rx.*
 
 class MainActivityViewModel(var serviceApi: ServiceAPIs, var schedulerProvider: SchedulerProvider) {
 
-    private lateinit var _liveGithubResponse: LiveData<PagedList<RepoResponse.Item>>
-    private lateinit var _liveGithubDataSource: MutableLiveData<GithubDataSource>
-    private lateinit var _networkState: LiveData<AppNetworkState>
-    private lateinit var _initialState: LiveData<AppNetworkState>
-    private lateinit var liveGithubDataSourceFactory: GithubDataSourceFactory
+    lateinit var liveGithubResponse: LiveData<PagedList<RepoResponse.Item>>
+    lateinit var liveGithubDataSource: MutableLiveData<GithubDataSource>
+    lateinit var networkState: LiveData<AppNetworkState>
+    lateinit var initialState: LiveData<AppNetworkState>
+    lateinit var liveGithubDataSourceFactory: GithubDataSourceFactory
 
-    val liveGithubResponse: LiveData<PagedList<RepoResponse.Item>>
-        get() = _liveGithubResponse
-
-    val liveGithubDataSource
-        get() = _liveGithubDataSource
-
-    val networkState
-        get() = _networkState
-
-    val initialState
-        get() = _initialState
 
     fun callGithubRepos(query: String) {
 
@@ -38,19 +27,19 @@ class MainActivityViewModel(var serviceApi: ServiceAPIs, var schedulerProvider: 
                 .setPageSize(10).build()
 
         liveGithubDataSourceFactory = GithubDataSourceFactory(serviceApi, schedulerProvider, query)
-        _liveGithubDataSource = liveGithubDataSourceFactory.liveDataSource
+        this.liveGithubDataSource = liveGithubDataSourceFactory.liveDataSource
 
-        // SwitchMap between _networkState LiveData and DataSource networkState
-        _networkState = Transformations.switchMap(liveGithubDataSourceFactory.liveDataSource
-        ) { dataSource -> dataSource.getNetworkState }
+        // SwitchMap between networkState LiveData and DataSource networkState
+        this.networkState = Transformations.switchMap(liveGithubDataSourceFactory.liveDataSource
+        ) { dataSource -> dataSource.networkState }
 
-        // SwitchMap between _networkState LiveData and DataSource networkState
-        _initialState = Transformations.switchMap(liveGithubDataSourceFactory.liveDataSource
-        ) { dataSource -> dataSource.getInitialLoading }
+        // SwitchMap between networkState LiveData and DataSource networkState
+        this.initialState = Transformations.switchMap(liveGithubDataSourceFactory.liveDataSource
+        ) { dataSource -> dataSource.initialLoading }
 
 
         val builder = LivePagedListBuilder<Long, RepoResponse.Item>(liveGithubDataSourceFactory, pagedListConfig)
-        _liveGithubResponse = builder.build()
+        this.liveGithubResponse = builder.build()
 
     }
 }

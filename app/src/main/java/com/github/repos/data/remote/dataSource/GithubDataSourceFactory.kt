@@ -8,18 +8,16 @@ import com.github.repos.rx.SchedulerProvider
 
 class GithubDataSourceFactory(private val serviceAPIs: ServiceAPIs, private val schedulerProvider: SchedulerProvider, private var queryText: String) : DataSource.Factory<Long, RepoResponse.Item>() {
 
-    private var _liveDataSource = MutableLiveData<GithubDataSource>()
-    private lateinit var _githubDataSource: GithubDataSource
+    var liveDataSource = MutableLiveData<GithubDataSource>()
+    lateinit var githubDataSource: GithubDataSource
 
-    val liveDataSource
-        get() = _liveDataSource
 
     /**
      * Create DataSource Object
      * */
     override fun create(): DataSource<Long, RepoResponse.Item> {
-        _githubDataSource = GithubDataSource(serviceAPIs, schedulerProvider, queryText)
-        _liveDataSource.postValue(_githubDataSource)
-        return this._githubDataSource
+        githubDataSource = GithubDataSource(serviceAPIs, schedulerProvider, queryText)
+        this.liveDataSource.postValue(githubDataSource)
+        return this.githubDataSource
     }
 }

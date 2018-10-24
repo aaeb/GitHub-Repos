@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Repos</string>
+    <string name="app_name">Github Repos</string>
     <string name="no_data">No data found</string>
     <string name="all_search_repos">Search Repositories</string>
     <string name="all_github">Github</string>

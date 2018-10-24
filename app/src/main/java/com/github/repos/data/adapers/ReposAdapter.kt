@@ -33,7 +33,6 @@ class ReposAdapter : PagedListAdapter<RepoResponse.Item, RecyclerView.ViewHolder
     fun attachContext(ctx: Context) {
         this.mContext = ctx
         intent = Intent(mContext, RepoDetailsActivity::class.java)
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -93,13 +92,6 @@ class ReposAdapter : PagedListAdapter<RepoResponse.Item, RecyclerView.ViewHolder
                 networkItemBinding.proNetwork.visibility = View.VISIBLE
             } else {
                 networkItemBinding.proNetwork.visibility = View.GONE
-            }
-//
-            if (networkState != null && networkState.state == AppNetworkState.State.FAILED) {
-                networkItemBinding.tvNetworkError.visibility = View.VISIBLE
-                networkItemBinding.tvNetworkError.text = networkState.value!!
-            } else {
-                networkItemBinding.tvNetworkError.visibility = View.GONE
             }
         }
 
